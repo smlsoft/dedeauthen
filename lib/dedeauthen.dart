@@ -48,17 +48,26 @@ class AuthService {
     }
   }
 
-  Future<void> signInWithApple() async {
+  Future<bool> signInWithApple() async {
     final appleProvider = AppleAuthProvider();
     appleProvider.addScope('email');
 
     await _auth.signInWithProvider(appleProvider);
+    return true;
   }
 
-  Future<void> signInWithEmail(
+  Future<bool> signInWithEmail(
       String serviceApi, String userName, String passWord) async {
-    final _result =
-        await _userRepository.authenUser(serviceApi, userName, passWord);
-    if (_result.success) {}
+    try {
+      final _result =
+          await _userRepository.authenUser(serviceApi, userName, passWord);
+      if (_result.success) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
   }
 }
